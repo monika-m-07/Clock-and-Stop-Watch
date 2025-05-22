@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock and Stopwatch App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #1e293b;
+    font-family: Arial, sans-serif;
+}
+.container {
+    display: flex;
+    gap: 40px;
+}
+#clock, #stopwatch {
+    background-color: #0f172a;
+    color: #e2e8f0;
+    text-align: center;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    width: 300px;
+}
+#time {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+#date {
+    font-size: 1.2em;
+    color: #94a3b8;
+}
+#display {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #e2e8f0;
+}
+.buttons button {
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.buttons button:hover {
+    background-color: #d1d5db;
+}
+.buttons button:nth-child(1) {
+    background-color: #4ade80;
+    color: white;
+}
+.buttons button:nth-child(2) {
+    background-color: #f87171;
+    color: white;
+}
+.buttons button:nth-child(3) {
+    background-color: #60a5fa;
+    color: white;
+}
+</style>
+<body>
+    <div class="container">    
+        <div id="clock">
+            <h2>Digital Clock</h2>
+            <p id="time">00:00:00 AM</p>
+            <p id="date">Loading...</p>
+        </div>        
+        <div id="stopwatch">
+            <h2>Stopwatch</h2>
+            <p id="display">00:00:00</p>
+            <div class="buttons">
+                <button onclick="startTimer()">Start</button>
+                <button onclick="stopTimer()">Stop</button>
+                <button onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+    </div>
+    <script >function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const session = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    document.getElementById('time').innerText = `${formattedHours}:${minutes}:${seconds} ${session}`;
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('date').innerText = now.toLocaleDateString(undefined, options);
+}
+setInterval(updateClock, 1000);
+updateClock(); 
+let timer;
+let elapsed = 0;
+function startTimer() {
+    if (!timer) {
+        timer = setInterval(() => {
+            elapsed++;
+            document.getElementById("display").innerText = formatTime(elapsed);
+        }, 1000);
+    }
+}
+function stopTimer() {
+    clearInterval(timer);
+    timer = null;
+}
+function resetTimer() {
+    stopTimer();
+    elapsed = 0;
+    document.getElementById("display").innerText = "00:00:00";
+}
+function formatTime(seconds) {
+    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    return `${hrs}:${mins}:${secs}`;
+}</script>
+</body>
+</html>
